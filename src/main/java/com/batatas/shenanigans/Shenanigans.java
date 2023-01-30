@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.block.Block;
@@ -85,7 +86,8 @@ public class Shenanigans
         BlockState state = world.getBlockState(playerLocation);
         Block block = state.getBlock();
 
-        if (block instanceof GrassBlock) {
+        if (!world.isClientSide && block instanceof GrassBlock && !((Player) player).isCreative()) {
+            world.removeBlock(playerLocation, false);
             world.explode(null, player.getX(), player.getY(), player.getZ(), (float)3.0, true, BlockInteraction.BREAK);
         }
     }
